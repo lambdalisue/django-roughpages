@@ -30,7 +30,7 @@ def roughpage(request, url):
         # redirect to the url which have end slash
         return redirect(url + '/', permanent=True)
     # get base filename from url
-    filename = url_to_filename(url) + settings.ROUGHPAGES_TEMPLATE_FILE_EXT
+    filename = url_to_filename(url)
     # add extra prefix path
     filename = os.path.join(settings.ROUGHPAGES_TEMPLATE_DIR, filename)
     # try to find the template_filename with backends

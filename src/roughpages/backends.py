@@ -3,10 +3,20 @@
 Roughpage template filename backends
 """
 __author__ = 'Alisue <lambdalisue@hashnote.net>'
-import os
+from functools import wraps
 
 
 def get_backend(backend_class=None):
+    """
+    Get backend instance
+
+    If no `backend_class` is specified, the backend class is determined from
+    the value of `settings.ROUGHPAGES_BACKEND`.
+    `backend_class` can be a class object or dots separated python import path
+
+    Returns:
+        backend instance
+    """
     from roughpages.conf import settings
     from roughpages.compat import import_module
     cache_name = '_backend_instance'
@@ -20,16 +30,30 @@ def get_backend(backend_class=None):
     return getattr(get_backend, cache_name)
 
 
+def prepare_filename_extensions(fn):
+    """
+    A decorator to append filename extensions to filenames
+    """
+    @wraps(fn)
+    def inner(self, normalized_url, request):
+        filenames = fn(self, normalized_url, request)
+        filenames = [x + ext for x in filenames if x]
+        return filenames
+    from roughpages.conf import settings
+    ext = settings.ROUGHPAGES_TEMPLATE_FILE_EXT
+    return inner
+
+
 class TemplateFilenameBackendBase(object):
     """
     A base class of TemplateFilenameBackend
     """
-    def prepare_filenames(self, filename, request):
+    def prepare_filenames(self, normalized_url, request):
         """
         Prepare template filename list
 
         Args:
-            filename (str): A base filename
+            normalized_url (str): A normalized url
             request (instance): An instance of HttpRequest
 
         Returns:
@@ -47,12 +71,14 @@ class PlainTemplateFilenameBackend(TemplateFilenameBackendBase):
     """
     A TemplateFilenameBackend which simply return filename single list
     """
-    def prepare_filenames(self, filename, request):
+
+    @prepare_filename_extensions
+    def prepare_filenames(self, normalized_url, request):
         """
         Prepare template filename list
 
         Args:
-            filename (str): A base filename
+            normalized_url (str): A normalized url
             request (instance): An instance of HttpRequest
 
         Returns:
@@ -62,13 +88,13 @@ class PlainTemplateFilenameBackend(TemplateFilenameBackendBase):
             >>> from mock import MagicMock
             >>> request = MagicMock()
             >>> backend = PlainTemplateFilenameBackend()
-            >>> filenames = backend.prepare_filenames('foo/bar/hogehoge.html',
+            >>> filenames = backend.prepare_filenames('foo/bar/hogehoge',
             ...                                       request)
             >>> assert filenames == [
             ...     'foo/bar/hogehoge.html'
             ... ]
         """
-        return [filename]
+        return [normalized_url]
 
 
 class AuthTemplateFilenameBackend(TemplateFilenameBackendBase):
@@ -76,7 +102,9 @@ class AuthTemplateFilenameBackend(TemplateFilenameBackendBase):
     A TemplateFilenameBackend which return filename with authenticated state
     suffix.
     """
-    def prepare_filenames(self, filename, request):
+
+    @prepare_filename_extensions
+    def prepare_filenames(self, normalized_url, request):
         """
         Prepare template filename list based on the user authenticated state
 
@@ -86,7 +114,7 @@ class AuthTemplateFilenameBackend(TemplateFilenameBackendBase):
         list.
 
         Args:
-            filename (str): A base filename
+            normalized_url (str): A normalized url
             request (instance): An instance of HttpRequest
 
         Returns:
@@ -97,26 +125,25 @@ class AuthTemplateFilenameBackend(TemplateFilenameBackendBase):
             >>> request = MagicMock()
             >>> request.user.is_authenticated.return_value = True
             >>> backend = AuthTemplateFilenameBackend()
-            >>> filenames = backend.prepare_filenames('foo/bar/hogehoge.html',
+            >>> filenames = backend.prepare_filenames('foo/bar/hogehoge',
             ...                                       request)
             >>> assert filenames == [
             ...     'foo/bar/hogehoge_authenticated.html',
             ...     'foo/bar/hogehoge.html'
             ... ]
             >>> request.user.is_authenticated.return_value = False
-            >>> filenames = backend.prepare_filenames('foo/bar/hogehoge.html',
+            >>> filenames = backend.prepare_filenames('foo/bar/hogehoge',
             ...                                       request)
             >>> assert filenames == [
             ...     'foo/bar/hogehoge_anonymous.html',
             ...     'foo/bar/hogehoge.html'
             ... ]
         """
-        basename, ext = os.path.splitext(filename)
-        filenames = [filename]
+        filenames = [normalized_url]
         if request.user.is_authenticated():
-            filenames.insert(0, "%s_authenticated%s" % (basename, ext))
+            filenames.insert(0, normalized_url + "_authenticated")
         else:
-            filenames.insert(0, "%s_anonymous%s" % (basename, ext))
+            filenames.insert(0, normalized_url + "_anonymous")
         return filenames
 
 
