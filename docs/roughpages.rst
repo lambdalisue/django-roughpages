@@ -6,18 +6,11 @@ Subpackages
 
 .. toctree::
 
+    roughpages.backends
     roughpages.tests
 
 Submodules
 ----------
-
-roughpages.backends module
---------------------------
-
-.. automodule:: roughpages.backends
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 roughpages.compat module
 ------------------------
