@@ -12,6 +12,9 @@ class RoughpageConf(AppConf):
     # An backend class path
     BACKEND = 'roughpages.backends.AuthTemplateFilenameBackend'
 
+    # A special filename without extension indicate the root '/'
+    INDEX_FILENAME = 'index'
+
     # A template filename located directory
     TEMPLATE_DIR = 'roughpages'
 

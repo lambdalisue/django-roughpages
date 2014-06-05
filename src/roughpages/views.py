@@ -30,12 +30,13 @@ def roughpage(request, url):
         # redirect to the url which have end slash
         return redirect(url + '/', permanent=True)
     # get base filename from url
-    filename = url_to_filename(url) + settings.ROUGHPAGES_TEMPLATE_FILE_EXT
-    # add extra prefix path
-    filename = os.path.join(settings.ROUGHPAGES_TEMPLATE_DIR, filename)
+    filename = url_to_filename(url)
     # try to find the template_filename with backends
     template_filenames = get_backend().prepare_filenames(filename,
                                                          request=request)
+    # add extra prefix path
+    root = settings.ROUGHPAGES_TEMPLATE_DIR
+    template_filenames = [os.path.join(root, x) for x in template_filenames]
     try:
         t = loader.select_template(template_filenames)
         return render_roughpage(request, t)

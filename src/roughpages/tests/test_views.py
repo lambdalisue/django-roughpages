@@ -11,6 +11,7 @@ from roughpages.views import render_roughpage, roughpage
 
 
 @override_settings(
+    APPEND_SLASH=True,
     ROUGHPAGES_BACKEND='roughpages.backends.PlainTemplateFilenameBackend',
     ROUGHPAGES_TEMPLATE_DIR='roughpages',
     ROUGHPAGES_TEMPLATE_FILE_EXT='.html',
@@ -20,6 +21,7 @@ class RoughpagesViewsTestCase(TestCase):
     def setUp(self):
         self.request = MagicMock()
         self.request.session = {}
+        self.request.user.is_authenticated.return_value = False
 
     @patch.multiple('roughpages.views',
                     RequestContext=DEFAULT,
@@ -46,6 +48,52 @@ class RoughpagesViewsTestCase(TestCase):
         # loader.select_template should be called with follow
         # because backend is PlainTemplateFilenameBackend
         template_filenames = ['roughpages/foo/bar/hoge.html']
+        loader.select_template.assert_called_with(template_filenames)
+        # render_roughpage should be called with
+        t = loader.select_template()
+        render_roughpage.assert_called_with(self.request, t)
+        # should return the return of render_roughpage
+        self.assertEqual(r, render_roughpage())
+
+    @patch.multiple('roughpages.views',
+                    redirect=DEFAULT)
+    def test_roughpage_redirect(self, redirect):
+        url = '/foo/bar/hoge'
+        roughpage(self.request, url)
+        # redirect should be called
+        redirect.assert_called_with(url + '/', permanent=True)
+
+    @patch.multiple('roughpages.views',
+                    loader=DEFAULT,
+                    render_roughpage=DEFAULT)
+    def test_roughpage_index(self, loader, render_roughpage):
+        url = '/'
+        r = roughpage(self.request, url)
+        # loader.select_template should be called with follow
+        # because backend is PlainTemplateFilenameBackend
+        template_filenames = ['roughpages/index.html']
+        loader.select_template.assert_called_with(template_filenames)
+        # render_roughpage should be called with
+        t = loader.select_template()
+        render_roughpage.assert_called_with(self.request, t)
+        # should return the return of render_roughpage
+        self.assertEqual(r, render_roughpage())
+
+    @patch.multiple('roughpages.views',
+                    get_backend=DEFAULT,
+                    loader=DEFAULT,
+                    render_roughpage=DEFAULT)
+    def test_roughpage_index_auth(self, get_backend, loader, render_roughpage):
+        from roughpages.backends import AuthTemplateFilenameBackend
+        get_backend.return_value = AuthTemplateFilenameBackend()
+        url = '/'
+        r = roughpage(self.request, url)
+        # loader.select_template should be called with follow
+        # because backend is PlainTemplateFilenameBackend
+        template_filenames = [
+            'roughpages/index_anonymous.html',
+            'roughpages/index.html',
+        ]
         loader.select_template.assert_called_with(template_filenames)
         # render_roughpage should be called with
         t = loader.select_template()

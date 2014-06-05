@@ -6,15 +6,6 @@ from django.test import TestCase
 from roughpages import backends
 from roughpages.tests.compat import MagicMock, override_settings
 
-TEMPLATE_FILENAME = 'foo/bar/hogehoge.html'
-ANONYMOUS_TEMPLATE_FILENAME = 'foo/bar/hogehoge_anonymous.html'
-AUTHENTICATED_TEMPLATE_FILENAME = 'foo/bar/hogehoge_authenticated.html'
-
-ANONYMOUS_REQUEST = MagicMock()
-ANONYMOUS_REQUEST.user.is_authenticated.return_value = False
-AUTHENTICATED_REQUEST = MagicMock()
-AUTHENTICATED_REQUEST.user.is_authenticated.return_value = True
-
 
 @override_settings(
     ROUGHPAGES_BACKEND='roughpages.backends.AuthTemplateFilenameBackend',
@@ -51,40 +42,68 @@ class RoughpagesTemplateFilenameBackendBaseTestCase(TestCase):
         """prepare_filenames should raise NotImplementedError"""
         self.assertRaises(NotImplementedError,
                           self.backend.prepare_filenames,
-                          TEMPLATE_FILENAME,
-                          AUTHENTICATED_REQUEST)
+                          'foo/bar/hoge',
+                          self.request)
 
 
 class RoughpagesPlainTemplateFilenameBackendTestCase(TestCase):
     def setUp(self):
         self.backend = backends.PlainTemplateFilenameBackend()
+        self.request = MagicMock()
 
-    def test_prepare_filenames_return_correct_list(self):
+    def test_prepare_filenames(self):
         """prepare_filenames should return a list with original filename"""
-        r = self.backend.prepare_filenames(TEMPLATE_FILENAME,
-                                           AUTHENTICATED_REQUEST)
-        self.assertEqual(r, [TEMPLATE_FILENAME])
+        r = self.backend.prepare_filenames('foo/bar/hoge',
+                                           self.request)
+        self.assertEqual(r, ['foo/bar/hoge.html'])
+
+    def test_prepare_filenames_index(self):
+        """prepare_filenames should return a list with original filename"""
+        r = self.backend.prepare_filenames('',
+                                           self.request)
+        self.assertEqual(r, ['index.html'])
 
 
 class RoughpagesAuthTemplateFilenameBackendTestCase(TestCase):
     def setUp(self):
         self.backend = backends.AuthTemplateFilenameBackend()
+        self.annonymous_request = MagicMock()
+        self.annonymous_request.user.is_authenticated.return_value = False
+        self.authenticated_request = MagicMock()
+        self.authenticated_request.user.is_authenticated.return_value = True
 
     def test_prepare_filenames_with_anonymous(self):
         """prepare_filenames should return a list for anonymous user"""
-        r = self.backend.prepare_filenames(TEMPLATE_FILENAME,
-                                           ANONYMOUS_REQUEST)
+        r = self.backend.prepare_filenames('foo/bar/hoge',
+                                           self.annonymous_request)
         self.assertEqual(r, [
-            ANONYMOUS_TEMPLATE_FILENAME,
-            TEMPLATE_FILENAME,
+            'foo/bar/hoge_anonymous.html',
+            'foo/bar/hoge.html',
+        ])
+
+    def test_prepare_filenames_with_anonymous_index(self):
+        """prepare_filenames should return a list for anonymous user"""
+        r = self.backend.prepare_filenames('',
+                                           self.annonymous_request)
+        self.assertEqual(r, [
+            'index_anonymous.html',
+            'index.html',
         ])
 
     def test_prepare_filenames_with_authenticated(self):
         """prepare_filenames should return a list for authenticated user"""
-        r = self.backend.prepare_filenames(TEMPLATE_FILENAME,
-                                           AUTHENTICATED_REQUEST)
+        r = self.backend.prepare_filenames('foo/bar/hoge',
+                                           self.authenticated_request)
         self.assertEqual(r, [
-            AUTHENTICATED_TEMPLATE_FILENAME,
-            TEMPLATE_FILENAME,
+            'foo/bar/hoge_authenticated.html',
+            'foo/bar/hoge.html',
         ])
 
+    def test_prepare_filenames_with_authenticated_index(self):
+        """prepare_filenames should return a list for authenticated user"""
+        r = self.backend.prepare_filenames('',
+                                           self.authenticated_request)
+        self.assertEqual(r, [
+            'index_authenticated.html',
+            'index.html',
+        ])
