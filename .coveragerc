@@ -1,0 +1,11 @@
+[report]
+include =
+    src/*.py
+    tests/*.py
+omit =
+    src/roughpages/__init__.py
+    src/roughpages/compat.py
+    src/roughpages/tests/compat.py
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
