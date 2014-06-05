@@ -51,11 +51,17 @@ class RoughpagesPlainTemplateFilenameBackendTestCase(TestCase):
         self.backend = backends.PlainTemplateFilenameBackend()
         self.request = MagicMock()
 
-    def test_prepare_filenames_return_correct_list(self):
+    def test_prepare_filenames(self):
         """prepare_filenames should return a list with original filename"""
         r = self.backend.prepare_filenames('foo/bar/hoge',
                                            self.request)
         self.assertEqual(r, ['foo/bar/hoge.html'])
+
+    def test_prepare_filenames_index(self):
+        """prepare_filenames should return a list with original filename"""
+        r = self.backend.prepare_filenames('',
+                                           self.request)
+        self.assertEqual(r, ['index.html'])
 
 
 class RoughpagesAuthTemplateFilenameBackendTestCase(TestCase):
@@ -75,6 +81,15 @@ class RoughpagesAuthTemplateFilenameBackendTestCase(TestCase):
             'foo/bar/hoge.html',
         ])
 
+    def test_prepare_filenames_with_anonymous_index(self):
+        """prepare_filenames should return a list for anonymous user"""
+        r = self.backend.prepare_filenames('',
+                                           self.annonymous_request)
+        self.assertEqual(r, [
+            'index_anonymous.html',
+            'index.html',
+        ])
+
     def test_prepare_filenames_with_authenticated(self):
         """prepare_filenames should return a list for authenticated user"""
         r = self.backend.prepare_filenames('foo/bar/hoge',
@@ -84,3 +99,11 @@ class RoughpagesAuthTemplateFilenameBackendTestCase(TestCase):
             'foo/bar/hoge.html',
         ])
 
+    def test_prepare_filenames_with_authenticated_index(self):
+        """prepare_filenames should return a list for authenticated user"""
+        r = self.backend.prepare_filenames('',
+                                           self.authenticated_request)
+        self.assertEqual(r, [
+            'index_authenticated.html',
+            'index.html',
+        ])
