@@ -64,7 +64,7 @@ class AuthTemplateFilenameBackend(TemplateFilenameBackendBase):
         """
         filenames = [normalized_url]
         if request.user.is_authenticated():
-            filenames.insert(0, normalized_url + "_authenticated")
+            filenames.insert(0, normalized_url + ".authenticated")
         else:
-            filenames.insert(0, normalized_url + "_anonymous")
+            filenames.insert(0, normalized_url + ".anonymous")
         return filenames

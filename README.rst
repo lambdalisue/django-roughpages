@@ -130,7 +130,7 @@ Quick tutorial
 
 3.  Access http://localhost:8000/foo/bar/hoge/ and you will see "This is Hoge"
 
-4.  Create ``roughpages/foo/bar/piyo_anonymous.html`` as follow
+4.  Create ``roughpages/foo/bar/piyo.anonymous.html`` as follow
 
     .. code:: html
 
@@ -140,7 +140,7 @@ Quick tutorial
         </body>
         </html>
 
-5.  Create ``roughpages/foo/bar/piyo_authenticated.html`` as follow
+5.  Create ``roughpages/foo/bar/piyo.authenticated.html`` as follow
 
     .. code:: html
 
@@ -158,3 +158,8 @@ Quick tutorial
 8.  Access http://localhost:8000/foo/bar/piyo/ and you will see
     "This is Piyo Authenticated"
 
+
+.. Note::
+    
+    Any dots ('.') in a last part of URL is replaced to underscore ('_') to prevent a security risk.
+    See https://github.com/lambdalisue/django-roughpages/issues/3

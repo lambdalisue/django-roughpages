@@ -56,6 +56,22 @@ class RoughpagesViewsTestCase(TestCase):
         self.assertEqual(r, render_roughpage())
 
     @patch.multiple('roughpages.views',
+                    loader=DEFAULT,
+                    render_roughpage=DEFAULT)
+    def test_roughpage_replace_dots(self, loader, render_roughpage):
+        url = '/foo.foo/bar.bar/hoge.hoge/'
+        r = roughpage(self.request, url)
+        # loader.select_template should be called with follow
+        # because backend is PlainTemplateFilenameBackend
+        template_filenames = ['roughpages/foo.foo/bar.bar/hoge_hoge.html']
+        loader.select_template.assert_called_with(template_filenames)
+        # render_roughpage should be called with
+        t = loader.select_template()
+        render_roughpage.assert_called_with(self.request, t)
+        # should return the return of render_roughpage
+        self.assertEqual(r, render_roughpage())
+
+    @patch.multiple('roughpages.views',
                     redirect=DEFAULT)
     def test_roughpage_redirect(self, redirect):
         url = '/foo/bar/hoge'
@@ -91,7 +107,7 @@ class RoughpagesViewsTestCase(TestCase):
         # loader.select_template should be called with follow
         # because backend is PlainTemplateFilenameBackend
         template_filenames = [
-            'roughpages/index_anonymous.html',
+            'roughpages/index.anonymous.html',
             'roughpages/index.html',
         ]
         loader.select_template.assert_called_with(template_filenames)

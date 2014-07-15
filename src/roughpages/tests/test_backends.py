@@ -77,7 +77,7 @@ class RoughpagesAuthTemplateFilenameBackendTestCase(TestCase):
         r = self.backend.prepare_filenames('foo/bar/hoge',
                                            self.annonymous_request)
         self.assertEqual(r, [
-            'foo/bar/hoge_anonymous.html',
+            'foo/bar/hoge.anonymous.html',
             'foo/bar/hoge.html',
         ])
 
@@ -86,7 +86,7 @@ class RoughpagesAuthTemplateFilenameBackendTestCase(TestCase):
         r = self.backend.prepare_filenames('',
                                            self.annonymous_request)
         self.assertEqual(r, [
-            'index_anonymous.html',
+            'index.anonymous.html',
             'index.html',
         ])
 
@@ -95,7 +95,7 @@ class RoughpagesAuthTemplateFilenameBackendTestCase(TestCase):
         r = self.backend.prepare_filenames('foo/bar/hoge',
                                            self.authenticated_request)
         self.assertEqual(r, [
-            'foo/bar/hoge_authenticated.html',
+            'foo/bar/hoge.authenticated.html',
             'foo/bar/hoge.html',
         ])
 
@@ -104,6 +104,6 @@ class RoughpagesAuthTemplateFilenameBackendTestCase(TestCase):
         r = self.backend.prepare_filenames('',
                                            self.authenticated_request)
         self.assertEqual(r, [
-            'index_authenticated.html',
+            'index.authenticated.html',
             'index.html',
         ])
