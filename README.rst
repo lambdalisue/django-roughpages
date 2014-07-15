@@ -31,9 +31,9 @@ django-roughpages
 Author
     Alisue <lambdalisue@hashnote.net>
 Supported python versions
-    Python 2.6, 2.7, 3.2, 3.3
+    Python 2.6, 2.7, 3.2, 3.3, 3.4
 Supported django versions
-    Django 1.2 - 1.6
+    Django 1.2 - 1.6 and 1.7 rc1
 
 An template based the flatpages_ like app.
 Not like django's flatpages app, django-roughpages render a template file which

@@ -26,6 +26,10 @@ def run_tests(base_dir=None, apps=None, verbosity=1, interactive=False):
     sys.path.insert(0, os.path.join(base_dir, 'src'))
     sys.path.insert(0, os.path.join(base_dir, 'tests'))
 
+    import django
+    if django.VERSION >= (1, 7):
+        django.setup()
+
     from django.conf import settings
     from django.test.utils import get_runner
     TestRunner = get_runner(settings)
