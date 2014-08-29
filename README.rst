@@ -56,11 +56,13 @@ exception.
 You can complicatedly select the corresponding template file.
 django-roughpages determine the filename with a backend system.
 The default backend is ``roughpages.backends.AuthTemplateFilenameBackend`` and
-it prefer ``hoge_anonymous.html`` or ``hoge_authenticated.html`` than 
+it prefer ``hoge.anonymous.html`` or ``hoge.authenticated.html`` than 
 ``hoge.html`` depends on the accessed user authentication state.
 Thus you can simply prepare the page for authenticated user as
-``<something>_authenticated.html`` and for anonymous user as
-``<something>_anonymous.html``.
+``<something>.authenticated.html`` and for anonymous user as
+``<something>.anonymous.html``.
+Note that the filename which contains ``'.'`` is not allowed thus user cannot 
+access ``hoge.authenticated.html` with a url like ``/hoge.authenticated`` to prevent unwilling file acccess.
 
 You can control the backend behavior with making a custom backend.
 To make a custom backend, you need to inherit
