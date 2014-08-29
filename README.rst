@@ -62,7 +62,7 @@ Thus you can simply prepare the page for authenticated user as
 ``<something>.authenticated.html`` and for anonymous user as
 ``<something>.anonymous.html``.
 Note that the filename which contains ``'.'`` is not allowed thus user cannot 
-access ``hoge.authenticated.html` with a url like ``/hoge.authenticated`` to prevent unwilling file acccess.
+access ``hoge.authenticated.html`` with a url like ``/hoge.authenticated`` to prevent unwilling file acccess.
 
 You can control the backend behavior with making a custom backend.
 To make a custom backend, you need to inherit
