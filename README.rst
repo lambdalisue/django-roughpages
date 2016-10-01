@@ -31,7 +31,7 @@ django-roughpages
 Author
     Alisue <lambdalisue@hashnote.net>
 Supported python versions
-    Python 2.6, 2.7, 3.2, 3.3, 3.4, 3.5
+    Python 2.6, 2.7, 3.3, 3.4, 3.5
 Supported django versions
     Django 1.2 - 1.10
 
