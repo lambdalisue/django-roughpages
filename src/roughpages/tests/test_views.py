@@ -30,8 +30,8 @@ class RoughpagesViewsTestCase(TestCase):
         t = MagicMock()
         r = render_roughpage(self.request, t)
         import django
-        if django.VERSION >= (1, 9):
-            # Newer than 1.9, template.render should be passed dict and Request instead of RequestContext as arguments
+        if django.VERSION >= (1, 8):
+            # Newer than 1.8, template.render should be passed dict and Request instead of RequestContext as arguments
             t.render_assert_called_with({}, self.request)
             HttpResponse.assert_called_with(t.render({}, self.request))
             self.assertEqual(r, HttpResponse())

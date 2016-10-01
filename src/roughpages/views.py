@@ -52,7 +52,7 @@ def render_roughpage(request, t):
     Internal interface to the rough page view.
     """
     import django
-    if django.VERSION >= (1, 9):
+    if django.VERSION >= (1, 8):
         c = {}
         response = HttpResponse(t.render(c, request))
     else:
