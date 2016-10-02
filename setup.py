@@ -3,7 +3,7 @@ import sys
 from setuptools import setup, find_packages
 
 NAME = 'django-roughpages'
-VERSION = '0.1.2'
+VERSION = '0.2.0'
 
 
 def read(filename):
