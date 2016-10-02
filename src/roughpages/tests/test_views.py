@@ -29,15 +29,22 @@ class RoughpagesViewsTestCase(TestCase):
     def test_render_roughpage(self, RequestContext, HttpResponse):
         t = MagicMock()
         r = render_roughpage(self.request, t)
-        # RequestContext should be initialized with request
-        RequestContext.assert_called_with(self.request)
-        # t.render should be called with the context
-        t.render.assert_called_with(RequestContext())
-        # HttpResponse should be initialized with the output of
-        # t.render(c)
-        HttpResponse.assert_called_with(t.render(RequestContext()))
-        # return should be response
-        self.assertEqual(r, HttpResponse())
+        import django
+        if django.VERSION >= (1, 8):
+            # Newer than 1.8, template.render should be passed dict and Request instead of RequestContext as arguments
+            t.render_assert_called_with({}, self.request)
+            HttpResponse.assert_called_with(t.render({}, self.request))
+            self.assertEqual(r, HttpResponse())
+        else:
+            # RequestContext should be initialized with request
+            RequestContext.assert_called_with(self.request)
+            # t.render should be called with the context
+            t.render.assert_called_with(RequestContext())
+            # HttpResponse should be initialized with the output of
+            # t.render(c)
+            HttpResponse.assert_called_with(t.render(RequestContext()))
+            # return should be response
+            self.assertEqual(r, HttpResponse())
 
     @patch.multiple('roughpages.views',
                     loader=DEFAULT,
@@ -121,7 +128,7 @@ class RoughpagesViewsTestCase(TestCase):
                     loader=DEFAULT,
                     render_roughpage=DEFAULT)
     def test_roughpage_no_template(self, loader, render_roughpage):
-        loader.select_template.side_effect = TemplateDoesNotExist
+        loader.select_template.side_effect = TemplateDoesNotExist('foobar')
         url = '/foo/bar/hoge/'
         self.assertRaises(Http404,
                           roughpage,
@@ -137,7 +144,7 @@ class RoughpagesViewsTestCase(TestCase):
                     loader=DEFAULT,
                     render_roughpage=DEFAULT)
     def test_roughpage_no_template_raise(self, loader, render_roughpage):
-        loader.select_template.side_effect = TemplateDoesNotExist
+        loader.select_template.side_effect = TemplateDoesNotExist('foobar')
         url = '/foo/bar/hoge/'
         self.assertRaises(TemplateDoesNotExist,
                           roughpage,
