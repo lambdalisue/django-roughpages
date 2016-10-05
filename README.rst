@@ -1,39 +1,39 @@
 django-roughpages
 ==========================
-.. image:: https://secure.travis-ci.org/lambdalisue/django-roughpages.png?branch=master
+.. image:: https://img.shields.io/travis/lambdalisue/django-roughpages/master.svg
     :target: http://travis-ci.org/lambdalisue/django-roughpages
     :alt: Build status
 
-.. image:: https://coveralls.io/repos/lambdalisue/django-roughpages/badge.png?branch=master
+.. image:: https://img.shields.io/scrutinizer/g/lambdalisue/django-roughpages/master.svg
+    :target: https://scrutinizer-ci.com/g/lambdalisue/django-roughpages/inspections
+    :alt: Code quality
+
+.. image:: https://img.shields.io/coveralls/jekyll/jekyll/master.svg
     :target: https://coveralls.io/r/lambdalisue/django-roughpages/
     :alt: Coverage
 
-.. image:: https://pypip.in/d/django-roughpages/badge.png
-    :target: https://pypi.python.org/pypi/django-roughpages/
-    :alt: Downloads
+.. image:: https://requires.io/github/lambdalisue/django-roughpages/requirements.svg?branch=master
+    :target: https://requires.io/github/lambdalisue/django-roughpages/requirements
+    :alt: Requirements
 
-.. image:: https://pypip.in/v/django-roughpages/badge.png
+.. image:: https://img.shields.io/pypi/v/django-roughpages.svg
     :target: https://pypi.python.org/pypi/django-roughpages/
-    :alt: Latest version
+    :alt: Version
 
-.. image:: https://pypip.in/wheel/django-roughpages/badge.png
+.. image:: https://img.shields.io/pypi/status/django-roughpages.svg
     :target: https://pypi.python.org/pypi/django-roughpages/
-    :alt: Wheel Status
+    :alt: Status
 
-.. image:: https://pypip.in/egg/django-roughpages/badge.png
-    :target: https://pypi.python.org/pypi/django-roughpages/
-    :alt: Egg Status
-
-.. image:: https://pypip.in/license/django-roughpages/badge.png
+.. image:: https://img.shields.io/pypi/l/django-roughpages.svg
     :target: https://pypi.python.org/pypi/django-roughpages/
     :alt: License
 
-Author
-    Alisue <lambdalisue@hashnote.net>
-Supported python versions
-    Python 2.7, 3.3, 3.4, 3.5
-Supported django versions
-    Django 1.7 - 1.10
+.. image:: https://img.shields.io/pypi/pyversions/django-roughpages.svg
+    :target: https://pypi.python.org/pypi/django-roughpages/
+    :alt: Python versions
+
+.. image:: https://img.shields.io/badge/django-1.7--1.10-blue.svg?style=flat-square
+    :alt: Django versions
 
 An template based the flatpages_ like app.
 Not like django's flatpages app, django-roughpages render a template file which
@@ -162,6 +162,6 @@ Quick tutorial
 
 
 .. Note::
-    
+
     Any dots ('.') in a last part of URL is replaced to underscore ('_') to prevent a security risk.
     See https://github.com/lambdalisue/django-roughpages/issues/3
