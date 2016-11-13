@@ -10,8 +10,15 @@ from django.http import Http404
 from roughpages.conf import settings
 from roughpages.views import roughpage
 
+try:
+    # Support a new-middleware/old-middleware
+    # Ref: https://docs.djangoproject.com/ja/1.10/topics/http/middleware/#upgrading-middleware
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object
 
-class RoughpageFallbackMiddleware(object):
+
+class RoughpageFallbackMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         if response.status_code != 404:
             # Non 404 response should not be treated with this middleware

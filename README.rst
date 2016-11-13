@@ -104,6 +104,17 @@ Configuration
 
 2.  Add our extra fallback middleware
 
+    Django >= 1.10
+
+    .. code:: python
+
+        MIDDLEWARE = (
+            # ...
+            'roughpages.middleware.RoughpageFallbackMiddleware',
+        )
+
+    Django < 1.10
+
     .. code:: python
 
         MIDDLEWARE_CLASSES = (
