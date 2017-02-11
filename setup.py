@@ -31,11 +31,10 @@ if sys.version_info >= (3, 0):
 setup(
     name=NAME,
     version=VERSION,
-    description=('A enhanced permission system which enable logical permission'
-                 'systems to complex permissions'),
+    description=('An template based flatpage like app of Django.'),
     long_description=read('README.rst'),
     classifiers=(
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
@@ -61,7 +60,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
-    package_data = {
+    package_data={
         '': ['README.rst',
              'requirements.txt',
              'requirements-test.txt',
